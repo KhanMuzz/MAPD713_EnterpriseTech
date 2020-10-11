@@ -27,3 +27,9 @@ myServer.listen(PORT, HOST_IP, function(){
         console.log("----- The server is ready for your requests at: http://"+HOST_IP +":"+PORT)
         console.log("----- Resources: /products , /products.id")
 });
+
+//Allow use of Post requests
+myServer.use(restify.fullResponse())
+
+//Map both body of Request and Params coming in with it -Unable switching between
+myServer.use(restify.bodyParser())
