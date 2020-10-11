@@ -1,0 +1,19 @@
+{
+  "name": "MAPD713-A1-MuzzamilKhan",
+  "version": "1.0.0",
+  "description": "REST - API : Using JSON data Products : Assignment 1",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt validate --verbose",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "restify": "4.1.1",
+    "save": "2.3.0"
+
+  },
+  "author": "Muzzamil Khan",
+  "studentId": "",
+  "private": true,
+  "license": "ISC"
+}
