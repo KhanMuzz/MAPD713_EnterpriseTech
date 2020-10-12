@@ -39,7 +39,7 @@ myServer.use(restify.fullResponse())
 //Map both body of Request and Params coming in with it -Unable switching between
 myServer.use(restify.bodyParser())
 
-//1.Post method to create new product and store it in memory in collections 'products'
+//2.Post method to create new product and store it in memory in collections 'products'
 myServer.post('/products', function(req, resp, next){
         //increment post counter
         counterPost ++
@@ -63,7 +63,7 @@ myServer.post('/products', function(req, resp, next){
         })//persistence ends
 });//add a user post ends
 
-//2. Get-Print all products in memory
+//3. Get-Print all products in memory
 myServer.get('/products', function(req, resp, next){
         counterGet ++
         console.log("The current GET counter is: " + counterGet)
@@ -79,7 +79,7 @@ myServer.get('/products', function(req, resp, next){
 
 //Find user by id
 
-//3.Find a product by product_id
+//4.Find a product by product_id
 myServer.get('/products/:id', function(req, resp, next){
         counterGet++
         console.log("The current GET counter is: " + counterGet)
@@ -96,3 +96,23 @@ myServer.get('/products/:id', function(req, resp, next){
         }   
     })
 });//find by id ends
+
+//5.Update a products info by id #, 
+myServer.put('products/:id', function(req, resp, next){
+
+    //create a new product with params coming in
+    var newProduct = {
+        _id   : req.params.id,
+        product: req.params.product,
+        price : req.params.price,
+        category: req.params.category
+    }
+    //update the user in memory/DB
+    products_Save.update(newProduct, function(error, updatedProduct){
+        if (error) {return next(new restify.InvalidArgumentError(JSON.stringify(error.errors)))}
+
+        //send a 200 ok stat code if no errors
+        resp.send(200)
+    })
+});//update by id ends
+
