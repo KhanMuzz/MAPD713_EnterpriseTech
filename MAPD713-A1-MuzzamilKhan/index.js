@@ -27,7 +27,7 @@ myServer.listen(PORT, HOST_IP, function(){
         console.log("----- The server is ready for your requests at: http://"+HOST_IP +":"+PORT)
         console.log("THIS SERVERS OFFERS ENDPOINTS/ACTIONS BELOW")
         console.log("http://127.0.0.1:3009/products")
-      //  console.log("http://127.0.0.1:3009/products")
+        console.log("http://127.0.0.1:3009/products/id")
       //  console.log("http://127.0.0.1:3009/products")
       //  console.log("http://127.0.0.1:3009/products")
       //  console.log("http://127.0.0.1:3009/products")
@@ -116,3 +116,17 @@ myServer.put('products/:id', function(req, resp, next){
     })
 });//update by id ends
 
+//Delete a product from memory
+myServer.del('/products/:id', function(req, resp, next){
+
+        //find and delete data stored in our memory
+        products_Save.delete(req.params.id, function(error, productToDelete){
+
+            //catch error
+            if (error) { return next(new restify.InvalidArgumentError(JSON.stringify(error.errors)))}
+
+            //return a code
+            resp.send(200)
+        })
+
+});
