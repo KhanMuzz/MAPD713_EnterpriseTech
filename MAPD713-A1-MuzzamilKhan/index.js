@@ -29,8 +29,8 @@ myServer.listen(PORT, HOST_IP, function(){
         console.log("http://127.0.0.1:3009/products , METHOD: POST")
         console.log("http://127.0.0.1:3009/products, METHOD GET")
         console.log("http://127.0.0.1:3009/products/id, METHOD GET")
-        console.log("http://127.0.0.1:3009/products/id METHOD PUT")
-        console.log("http://127.0.0.1:3009/products/id METHOD DELETE")
+        console.log("http://127.0.0.1:3009/products/id, METHOD PUT")
+        console.log("http://127.0.0.1:3009/products/id, METHOD DELETE")
 });
 
 //Allow use of Post requests
