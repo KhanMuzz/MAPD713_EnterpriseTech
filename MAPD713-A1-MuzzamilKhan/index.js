@@ -25,6 +25,12 @@ var myServer = restify.createServer({ name: SERVER_NAME});
 myServer.listen(PORT, HOST_IP, function(){
         console.log("----- WELCOME TO "+myServer.name + "  @  " + myServer.url)
         console.log("----- The server is ready for your requests at: http://"+HOST_IP +":"+PORT)
+        console.log("THIS SERVERS OFFERS ENDPOINTS/ACTIONS BELOW")
+        console.log("http://127.0.0.1:3009/products")
+      //  console.log("http://127.0.0.1:3009/products")
+      //  console.log("http://127.0.0.1:3009/products")
+      //  console.log("http://127.0.0.1:3009/products")
+      //  console.log("http://127.0.0.1:3009/products")
 });
 
 //Allow use of Post requests
@@ -33,11 +39,11 @@ myServer.use(restify.fullResponse())
 //Map both body of Request and Params coming in with it -Unable switching between
 myServer.use(restify.bodyParser())
 
-//Post method to create new product and store it in memory in collections 'products'
+//1.Post method to create new product and store it in memory in collections 'products'
 myServer.post('/products', function(req, resp, next){
         //increment post counter
         counterPost ++
-        console.log("The current post counter is: " + counterPost)
+        console.log("The current POST counter is: " + counterPost)
         //fetch param data and make a new 
         var newProduct = {
             product : req.params.product,
@@ -57,8 +63,10 @@ myServer.post('/products', function(req, resp, next){
         })//persistence ends
 });//add a user post ends
 
-// Print all products
+//2. Get-Print all products in memory
 myServer.get('/products', function(req, resp, next){
+        counterGet ++
+        console.log("The current GET counter is: " + counterGet)
 
         //using .find() to get all data stored in products collections
         products_Save.find({}, function(error, productsDataObject){
@@ -67,7 +75,24 @@ myServer.get('/products', function(req, resp, next){
             }
             resp.send(productsDataObject)
         })
-     /// resp.send("heyyyy")
-
-
 })//get all user ends
+
+//Find user by id
+
+//3.Find a product by product_id
+myServer.get('/products/:id', function(req, resp, next){
+        counterGet++
+        console.log("The current GET counter is: " + counterGet)
+    //find user in memory stored in collection products
+    products_Save.findOne({ _id: req.params.id }, function(error, foundProduct){
+
+        if (error) return next(new restify.InvalidArgumentError(JSON.stringify(error.errors)))
+        
+        if(foundProduct){
+            resp.send(foundProduct)
+        }else{
+            //send http error code
+            resp.send(404)
+        }   
+    })
+});//find by id ends
