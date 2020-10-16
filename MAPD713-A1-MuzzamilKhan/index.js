@@ -31,15 +31,15 @@ myServer.listen(PORT, HOST_IP, function(){
         console.log("http://127.0.0.1:3009/products")
         console.log("--------------------------------------------------------")
         console.log(" Find product by id: GET, must insert values before user")
-        console.log("http://127.0.0.1:3009/products/1")
+        console.log("http://127.0.0.1:3009/products/:id")
         console.log("--------------------------------------------------------")
         console.log(" Update product by id: PUT, must insert values before user")
-        console.log("http://127.0.0.1:3009/products/1?product=pc&price=200&category=pc")
+        console.log("http://127.0.0.1:3009/products/1/product-type/product-price/product-category")
         console.log("---------------------------------------------------------")
         console.log(" Delete product by id: DEL, must insert values before user")
-        console.log("http://127.0.0.1:3009/products/id")
+        console.log("http://127.0.0.1:3009/products/:id")
         console.log(" Create new product list, must use POST")
-        console.log("http://127.0.0.1:3009/products?product=mac&price=200&category=pc")
+        console.log("http://127.0.0.1:3009/products/product=type/product-price/product-category")
 });
 
 //Allow use of Post requests
