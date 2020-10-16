@@ -86,7 +86,6 @@ myServer.get('/products', function(req, resp, next){
         })
 })//get all user ends
 
-//Find user by id
 
 //4.Find a product by product_id
 myServer.get('/products/:id', function(req, resp, next){
