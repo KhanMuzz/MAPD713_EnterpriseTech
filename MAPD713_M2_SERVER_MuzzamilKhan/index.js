@@ -40,6 +40,19 @@ var myServer = restify.createServer({name : MY_SERVER_NAME})
 myServer.listen(PORT_NUM, IP_ADD, function(){
         console.log("Welcome to Patient Data Managment by M.Khan")
         console.log("This server is listening on: "+ myServer.url)
+        console.log("THIS SERVERS OFFERS ENDPOINTS/ACTIONS BELOW")
+        console.log("--------------------------------------------------------")
+        console.log(" List all Patients: GET, must insert values before used")
+        console.log("http://127.0.0.1:3009/patients")
+        console.log("--------------------------------------------------------")
+        console.log(" Find a Patient by id: GET, must insert values before used")
+        console.log("http://127.0.0.1:3009/patients/:id")
+        console.log("--------------------------------------------------------")
+        console.log(" Delete patient by id: DEL, must insert values before user")
+        console.log("http://127.0.0.1:3009/patients/:id")
+        console.log("--------------------------------------------------------")
+        console.log(" Create new patient, type call = POST")
+        console.log("http://127.0.0.1:3009/patients/JSON_FORMAT_DATA_ATTACHED_WITH_BODY")
 });//server listen ends
 
 //Allow Post requests to come in
@@ -48,6 +61,7 @@ myServer.use(restify.fullResponse())
 //Enable body parser to keep param and body of REQ/RESP Together
 myServer.use(restify.bodyParser())
 
+//Use for string parameters
 myServer.use(restify.queryParser());
 
 //-------SERVER WORKING, NOW I WILL IMPLEMENT DIFF REQ AND RESP CALLS-------
@@ -120,25 +134,7 @@ myServer.get('patients/:id', function(req, res, next){
     })
 })//search by id ends
 
-//-------------------OPERATION 3 - SEARCH BY ID
-//Use id and find a patient with matching id
-myServer.get('/patients/:id', function(req, resp, next){
-
-//find patient in memory stored in collection products
-patient_database.findOne({ _id: req.params.id }, function(error, foundPatient){
-
-    if (error) return next(new restify.InvalidArgumentError(JSON.stringify(error.errors)))
-    
-    if(foundPatient){
-        resp.send(foundPatient)
-    }else{
-        //send http error code
-        resp.send(404)
-    }   
-})
-});//find by id ends
-
-//-----------------OPERATION 4 - DELETE BY ID 
+//-----------------OPERATION 3 - DELETE BY ID 
 //Delete a patient from memory
 myServer.del('/patients/:id', function(req, resp, next){
 
