@@ -19,17 +19,7 @@ patient.heartBeatRate;
 patient.respiratoryRate;
 patient.CDCTemperature;
 patient.bloodOxygenLevel;
-// var patientFirstName;
-// var patientLastName;
-// var patientAge;
-// var patientPhoneNum;
-// var testingDate;
-// var familyDoctor;
-// var boodPressure;
-// var heartBeatRate;
-// var respiratoryRate;
-// var CDCTemperature;
-// var BloodOxygenLevel;
+
 
 //Variables required for server's operations
 var MY_SERVER_NAME = "PATIENTS DATA MANAGEMENT"
@@ -57,6 +47,8 @@ myServer.use(restify.fullResponse())
 
 //Enable body parser to keep param and body of REQ/RESP Together
 myServer.use(restify.bodyParser())
+
+myServer.use(restify.queryParser());
 
 //-------SERVER WORKING, NOW I WILL IMPLEMENT DIFF REQ AND RESP CALLS-------
 
@@ -106,9 +98,61 @@ myServer.get('/patients', function(req, res, next){
     })
 })//get all patients ends
 
+//-------------------OPERATION 3 - SEARCH BY ID
+//Search for a patient by id - GET CALL
+myServer.get('patients/:id', function(req, res, next){
 
+    //Lets find patient in database using .findOne()
+    //passing key : value pair in search _id : value parameter
+    patient_database.findOne({ _id: req.params.id}, function(error, patientFoundById){
 
+        //lets first catch any argument incoming errors
+        if(error){
+            return next(new restify.invalidArgumentError(JSON.stringify(error.errors)))
+        }
+        //if a patient was found with that id then return it
+        if(patientFoundById){
+            res.send(patientFoundById)
+        }else{
+            //send http not found error 404
+            res.send(404)
+        }
+    })
+})//search by id ends
 
+//-------------------OPERATION 3 - SEARCH BY ID
+//Use id and find a patient with matching id
+myServer.get('/patients/:id', function(req, resp, next){
+
+//find patient in memory stored in collection products
+patient_database.findOne({ _id: req.params.id }, function(error, foundPatient){
+
+    if (error) return next(new restify.InvalidArgumentError(JSON.stringify(error.errors)))
+    
+    if(foundPatient){
+        resp.send(foundPatient)
+    }else{
+        //send http error code
+        resp.send(404)
+    }   
+})
+});//find by id ends
+
+//-----------------OPERATION 4 - DELETE BY ID 
+//Delete a patient from memory
+myServer.del('/patients/:id', function(req, resp, next){
+
+    //find and delete data stored in our memory
+    patient_database.delete(req.params.id, function(error, productToDelete){
+
+        //catch error
+        if (error) { return next(new restify.InvalidArgumentError(JSON.stringify(error.errors)))}
+
+        //return a code
+        resp.send(200)
+    })
+
+});
 
 
 
