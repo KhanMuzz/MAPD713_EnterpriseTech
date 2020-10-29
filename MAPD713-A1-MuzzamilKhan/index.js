@@ -48,6 +48,11 @@ myServer.use(restify.fullResponse())
 //Map both body of Request and Params coming in with it -Unable switching between
 myServer.use(restify.bodyParser())
 
+var emp = {
+    "product": "yes1",
+    "price": "yes2",
+    "category":"yes3"
+  }
 //2.Post method to create new product and store it in memory in collections 'products'
 myServer.post('/products', function(req, resp, next){
         //increment post counter
@@ -78,12 +83,13 @@ myServer.get('/products', function(req, resp, next){
         console.log("The current GET counter is: " + counterGet)
 
         //using .find() to get all data stored in products collections
-        products_Save.find({}, function(error, productsDataObject){
-            if(error){
-                console.log(error)
-            }
-            resp.send(productsDataObject)
-        })
+      //---  products_Save.find({}, function(error, productsDataObject){
+      //----      if(error){
+      //----          console.log(error)
+      //----      }
+      //----      resp.send(productsDataObject)
+            resp.send(emp)
+     //----   })
 })//get all user ends
 
 
