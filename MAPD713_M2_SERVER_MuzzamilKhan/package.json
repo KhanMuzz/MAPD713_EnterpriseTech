@@ -1,0 +1,18 @@
+{
+  "name": "MAPD713_M2_SERVER_MuzzamilKhan",
+  "version": "1.0.0",
+  "description": "Mileston2 : Patient Data Management SERVER",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt validate --verbose",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "restify": "4.1.1",
+    "save": "2.3.0"
+  },
+  "author": "Muzzamil Khan",
+  "studentId": "301163748",
+  "private": "true",
+  "license": "ISC"
+}
