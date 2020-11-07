@@ -240,3 +240,21 @@ myServer.post('/patients/search', function(req, resp, next){
   }
 });//Find by id ends
 
+//5. DELETE A PATIENT BY ID: REQ TYPE DEL 
+myServer.del('/patients/:id', function(req,resp, next){
+    console.log("Delete request : Coming in, Delete patient by ID ")
+
+    //Use of .remove method of restify
+    PatientModel.remove({_id: req.params.id}, function(error, deletedPatient){
+      //Catch error
+      if(error){
+          return next(new Error(JSON.stringify(error.errors)));
+          console.log("Something went wrong");
+      }else{
+        resp.send(200)
+        console.log("Patient Deleted Sucessfully");
+      }
+    });
+});//Delete by id ends
+
+
