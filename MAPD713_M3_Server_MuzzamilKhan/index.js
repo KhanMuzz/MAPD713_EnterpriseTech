@@ -171,5 +171,23 @@ myServer.listen(port, ipAddress, function(){
     }//Else ends
   });//Create new patient method ends
 
+   //3. SEARCH A PATIENT BY ID: REQ METHOD TYPE : GET/:ID
+   myServer.get('/patients/:id', function(req, resp, next){
+     console.log("Get request: coming in to search by id: " + req.params.id);
+
+     //Find the patient by id match in the database
+     PatientModel.find({ _id : req.params.id}).exec(function (error, resultFound){
+
+      //If patient found, send back resp
+      if(resultFound){
+        resp.send(resultFound);
+      }else{
+        //Send back error 404 code
+        resp.send(404);
+        console.log(error);
+      }
+     });
+   });//Find by id ends
+
 
 
