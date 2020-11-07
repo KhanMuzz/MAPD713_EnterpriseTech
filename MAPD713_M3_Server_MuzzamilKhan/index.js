@@ -189,5 +189,54 @@ myServer.listen(port, ipAddress, function(){
      });
    });//Find by id ends
 
+//4. SEARCH A PATIENT BY NAME, PHONE OR FAMILY DOCTOR: REQ METHOD TYPE POST : /SEARCH
+myServer.post('/patients/search', function(req, resp, next){
+  console.log("POST request: coming in to search by name, phone number or family doctor");
 
+  if(req.body.firstName){
+    //Find the patient by first name in the database
+    PatientModel.find({ firstName: req.body.firstName}).exec(function (error, resultFound){
+    //If patient found, send back resp
+    if(resultFound){
+      resp.send(resultFound);
+    }else{
+      //Send back error 404 code
+      resp.send(404);
+    }
+   });
+  }else if(req.body.lastName){
+    //Find the patient by first name in the database
+    PatientModel.find({ lastName: req.body.lastName}).exec(function (error, resultFound){
+      //If patient found, send back resp
+      if(resultFound){
+        resp.send(resultFound);
+      }else{
+        //Send back error 404 code
+        resp.send(404);
+      }
+     });
+  }else if(req.body.phoneNum){
+    //Find the patient by first name in the database
+    PatientModel.find({ phoneNum: req.body.phoneNum}).exec(function (error, resultFound){
+      //If patient found, send back resp
+      if(resultFound){
+        resp.send(resultFound);
+      }else{
+        //Send back error 404 code
+        resp.send(404);
+      }
+     });
+  }else if(req.body.familyDoctor){
+    //Find the patient by first name in the database
+    PatientModel.find({ familyDoctor: req.body.familyDoctor}).exec(function (error, resultFound){
+      //If patient found, send back resp
+      if(resultFound){
+        resp.send(resultFound);
+      }else{
+        //Send back error 404 code
+        resp.send(404);
+      }
+     });
+  }
+});//Find by id ends
 
