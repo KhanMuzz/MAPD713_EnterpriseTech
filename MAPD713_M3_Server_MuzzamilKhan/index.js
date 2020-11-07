@@ -44,22 +44,21 @@ dbConnectionReady.once('open', function(){
     console.log("**************************************************************");
 });
 
-//Object of type patient
-var patient = new Object();
-patient.firstName;
-patient.lastName;
-patient.age;
-patient.phoneNum;
-patient.visitDate;
-patient.familyDoctor;
-patient.bloodPressure;
-patient.heartBeatRate;
-patient.respiratoryRate;
-patient.CDCTemperature;
-patient.bloodOxygenLevel;
 
 //Create a new mongoose DB and pass in patient object
-var patientDB = new mongoose.Schema(patient);
+var patientDB = new mongoose.Schema({
+        firstName       : String,
+        lastName        : String,
+        age             : String,
+        phoneNum        : String,
+        visitDate       : String,
+        familyDoctor    : String,
+        bloodPressure   : String,
+        heartBeatRate   : String,
+        respiratoryRate : String,
+        CDCTemperature  : String,
+        bloodOxygenLevel: String
+});
 
 // Convert the mangoose Database into a model, if it doesn't exist it will make a new model
 var PatientModel = mongoose.model('Patients', patientDB);
@@ -116,16 +115,62 @@ myServer.listen(port, ipAddress, function(){
 
   //1. LIST ALL PATIENTS IN DB: REQ TYPE : GET
   //Get all patients in the system
-  myServer.get('/patients', function (req, res, next) {
+  myServer.get('/patients', function (req, resp, next) {
     console.log('GET request: Coming in for list of all paitents');
     // Find every entity within the given collection
     PatientModel.find({}).exec(function (error, result) {
       if (error) return next(new Error(JSON.stringify(error.errors)))
-      res.send(result);
+      resp.send(result);
     });
   });//end of get all patients
 
   //2. INSERT A NEW PATIENT INTO DB: REQ TYPE : POST
+  myServer.post('/patients', function (req, resp, next){
+    console.log("POST request: Coming in to insert a new patient");
+   // console.log('POST request: patients body=>' + JSON.stringify(req.body));
+   //console.log("The type coming in is: "+ typeof(req.body.firstName))
+   //console.log("The type coming in is: "+ typeof(req.body.lastName))
+
+    if (req.body.firstName        === undefined  ||
+        req.body.lastName         === undefined  ||
+        req.body.age              === undefined  ||
+        req.body.phoneNum         === undefined  ||
+        req.body.visitDate        === undefined  ||
+        req.body.familyDoctor     === undefined  ||
+        req.body.bloodPressure    === undefined  ||
+        req.body.heartBeatRate    === undefined  ||
+        req.body.respiratoryRate  === undefined  ||
+        req.body.CDCTemperature   === undefined  ||
+        req.body.bloodOxygenLevel=== undefined  
+      ) {
+      // If there are any errors, pass them to next in the correct format
+      return next(new errors.BadRequestError('first_name must be supplied'))
+    }else{
+
+      //Make a new Mongo Model in JSON FORMAT that can be sent and saved in DB
+      var patientObj = new PatientModel({
+        firstName       : req.body.firstName,
+        lastName        : req.body.lastName,
+        age             : req.body.age,
+        phoneNum        : req.body.phoneNum,
+        visitDate       : req.body.visitDate,
+        familyDoctor    : req.body.familyDoctor,
+        bloodPressure   : req.body.bloodPressure,
+        heartBeatRate   : req.body.heartBeatRate,
+        respiratoryRate : req.body.respiratoryRate,
+        CDCTemperature  : req.body.CDCTemperature,
+        bloodOxygenLevel: req.body.bloodOxygenLevel
+      });
+      
+      // Create the patient and saving to db
+      patientObj.save(function (error, result) {
+      // If there are any errors, pass them to next in the correct format
+      if (error) return next(new Error(JSON.stringify(error.errors)))
+      // Send the patient if no issues
+      resp.send(201, result)
+    })
+    }
+  });
 
 
 
