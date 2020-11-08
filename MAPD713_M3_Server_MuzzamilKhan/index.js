@@ -260,33 +260,48 @@ myServer.del('/patients/:id', function(req,resp, next){
 //6. UPDATE A PATIENT BY ID: REQ TYPE PUT
 myServer.put('/patients/:id', function(req, resp, next){
   console.log("Update request : Coming in, patient by ID ")
-     
-  var patientObj= PatientModel.updateOne(
-  { id: req.params.id },  // <-- find stage
-  { $set: {                // <-- set stage
-    id              : req.params.id,
-    firstName       : req.body.firstName,
-    lastName        : req.body.lastName,
-    age             : req.body.age,
-    phoneNum        : req.body.phoneNum,
-    visitDate       : req.body.visitDate,
-    familyDoctor    : req.body.familyDoctor,
-    bloodPressure   : req.body.bloodPressure,
-    heartBeatRate   : req.body.heartBeatRate,
-    respiratoryRate : req.body.respiratoryRate,
-    CDCTemperature  : req.body.CDCTemperature,
-    bloodOxygenLevel: req.body.bloodOxygenLevel
-    } 
-  })  
-      //Update the patient in DB using update method
-      PatientModel.updateOne(patientObj, function(error, updatedPatient){
-        //Catch any errors and print
-        if(error){
-          //return next(new restify.InvalidArgumentError(JSON.stringify(error.errors)));
-          console.log("error")
-          console.log(error)
-        }
-        resp.send(updatedPatient);
-      });
+      
+  //Use a new model called tempPatientModel to find correct patient by ID and store it inside 
+      PatientModel.findById(req.params.id, function(err, tempPatientModel) {
 
-});//Update by id ends
+        if (err)
+            resp.send(err);
+        //Start placing values from body of request to the tempPatientModel
+        tempPatientModel.firstName       = req.body.firstName,
+        tempPatientModel.lastName        = req.body.lastName,
+        tempPatientModel.age             = req.body.age,
+        tempPatientModel.phoneNum        = req.body.phoneNum,
+        tempPatientModel.visitDate       = req.body.visitDate,
+        tempPatientModel.familyDoctor    = req.body.familyDoctor,
+        tempPatientModel.bloodPressure   = req.body.bloodPressure,
+        tempPatientModel.heartBeatRate   = req.body.heartBeatRate,
+        tempPatientModel.respiratoryRate = req.body.respiratoryRate,
+        tempPatientModel.CDCTemperature  = req.body.CDCTemperature,
+        tempPatientModel.bloodOxygenLevel= req.body.bloodOxygenLevel
+
+        //Now Lets save our tempPatientModel into the database...
+        tempPatientModel.save(function(err) {
+            if (err)
+                resp.send(err);
+            //If no errors send back a response to user
+            resp.json({ message: 'Yayyyy! Patient Updated!' });
+        });
+    });
+  });
+
+//7. LIST ALL PATIENTS CRITICAL CONDITION
+// myServer.get('/patients/critical', function (req, resp, next) {
+//   console.log('GET request: Coming in for list of all paitents');
+//   // Find all patients in our database
+//   PatientModel.find({}).exec(function (error, result) {
+//    // if (error) return next(new Error(JSON.stringify(error.errors)))
+//    // resp.send(result);
+//    //console.log(result)
+
+//    for(var i = 0; i < result.length; i++) {
+//     var obj = result[i];
+
+//     console.log(obj.bloodPressure);
+// }
+//   });
+// });//end of get all patients
