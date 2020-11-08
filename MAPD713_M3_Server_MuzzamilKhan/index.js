@@ -84,26 +84,22 @@ if (typeof port === "undefined") {
 //Start the restify server with port and ip set
 myServer.listen(port, ipAddress, function(){
   console.log("This server is listening at: "+MY_HOST_IP+":"+MY_MAIN_PORT);
-  // console.log("**************************************************************");
-  // console.log("THIS SERVERS OFFERS ENDPOINTS/ACTIONS BELOW")
-  // console.log("--------------------------------------------------------")
-  // console.log("List all Patients: GET, DB must have values for this OR returns []")
-  // console.log("http://127.0.0.1:5000/patients")
-  // console.log("--------------------------------------------------------")
-  // console.log(" Find a Patient by id: GET, must attach id number as a param")
-  // console.log("http://127.0.0.1:5000/patients/:id")
-  // console.log("--------------------------------------------------------")
-  // console.log("Find a Patient by ANY Field-Name: POST, must include JSON-Param in body")
-  // console.log("http://127.0.0.1:5000/patients/search")
-  // console.log("--------------------------------------------------------")
-  // console.log("Delete a patient by id: DEL, must insert values before user")
-  // console.log("http://127.0.0.1:5000/patients/:id")
-  // console.log("--------------------------------------------------------")
-  // console.log("Update a patient by id: PUT, must provide id as a param")
-  // console.log("http://127.0.0.1:5000/patients/:id")
-  // console.log("--------------------------------------------------------")
-  // console.log("Create new patient, type call = POST")
-  // console.log("http://127.0.0.1:5000/patients/JSON_FORMAT_DATA_ATTACHED_WITH_BODY")
+  console.log("**************************************************************");
+  console.log("THIS SERVERS OFFERS ENDPOINTS/ACTIONS BELOW")
+  console.log("List all Patients: GET, DB must have values for this OR returns []")
+  console.log("http://127.0.0.1:5000/patients")
+  console.log(" Find a Patient by id: GET, must attach id number as a param")
+  console.log("http://127.0.0.1:5000/patients/:id")
+  console.log("Find a Patient by Name, Phone# OR Doctors name: POST, must include JSON-Param in body")
+  console.log("http://127.0.0.1:5000/patients/search")
+  console.log("Delete a patient by id: DEL, must provide id as a param")
+  console.log("http://127.0.0.1:5000/patients/:id")
+  console.log("Update a patient by id: PUT, must provide id as a param")
+  console.log("http://127.0.0.1:5000/patients/:id")
+  console.log("Create new patient, POST, Must include Json data in body")
+  console.log("http://127.0.0.1:5000/patients/JSON_FORMAT_DATA_ATTACHED_WITH_BODY")
+  console.log("Find All critical patients, type call = GET")
+  console.log("http://127.0.0.1:5000/patients/critical")
 });
 
   //Enable POST REQ for this server
@@ -189,10 +185,11 @@ myServer.listen(port, ipAddress, function(){
      });
    });//Find by id ends
 
-//4. SEARCH A PATIENT BY NAME, PHONE OR FAMILY DOCTOR: REQ METHOD TYPE POST : /SEARCH
+//4. SEARCH A PATIENT BY NAMES, PHONE OR FAMILY DOCTOR: REQ METHOD TYPE POST : /SEARCH
 myServer.post('/patients/search', function(req, resp, next){
   console.log("POST request: coming in to search by name, phone number or family doctor");
 
+  //Use OF ELSE/IF to analyze which param USER is sending to us to search patients with
   if(req.body.firstName){
     //Find the patient by first name in the database
     PatientModel.find({ firstName: req.body.firstName}).exec(function (error, resultFound){
@@ -205,7 +202,7 @@ myServer.post('/patients/search', function(req, resp, next){
     }
    });
   }else if(req.body.lastName){
-    //Find the patient by first name in the database
+    //Find the patient by last name in the database
     PatientModel.find({ lastName: req.body.lastName}).exec(function (error, resultFound){
       //If patient found, send back resp
       if(resultFound){
@@ -216,7 +213,7 @@ myServer.post('/patients/search', function(req, resp, next){
       }
      });
   }else if(req.body.phoneNum){
-    //Find the patient by first name in the database
+    //Find the patient by phone number in the database
     PatientModel.find({ phoneNum: req.body.phoneNum}).exec(function (error, resultFound){
       //If patient found, send back resp
       if(resultFound){
@@ -227,7 +224,7 @@ myServer.post('/patients/search', function(req, resp, next){
       }
      });
   }else if(req.body.familyDoctor){
-    //Find the patient by first name in the database
+    //Find the patient by family doctor in the database
     PatientModel.find({ familyDoctor: req.body.familyDoctor}).exec(function (error, resultFound){
       //If patient found, send back resp
       if(resultFound){
@@ -238,19 +235,20 @@ myServer.post('/patients/search', function(req, resp, next){
       }
      });
   }
-});//Find by id ends
+});//Find by name, phone or doctor ends
 
 //5. DELETE A PATIENT BY ID: REQ TYPE DEL 
 myServer.del('/patients/:id', function(req,resp, next){
     console.log("Delete request : Coming in, Delete patient by ID ");
 
-    //Use of .remove method of restify
+    //Use of .remove() method of restify
     PatientModel.remove({_id: req.params.id}, function(error, deletedPatient){
       //Catch error
       if(error){
           return next(new Error(JSON.stringify(error.errors)));
           console.log("Something went wrong");
       }else{
+        //Send back ok code and a message to user
         resp.send(200)
         console.log("Patient Deleted Sucessfully");
       }
@@ -287,11 +285,12 @@ myServer.put('/patients/:id', function(req, resp, next){
             resp.json({ message: 'Yayyyy! Patient Updated!' });
         });
     });
-  });
+  });//Update patient by id ends
 
 //7. LIST ALL PATIENTS WITH CRITICAL CONDITION
 myServer.get('/patients/critical', function (req, resp, next) {
   console.log('FIND ALL PAITIENTS WITH CRITICAL MEDICAL READINGS:');
+  //String variable defining critical points coming in on console
   var conditions= "Blood pressure less than 80   OR > 130 is CRITICAL " + "\n"+
                   "Heartbeat rate less than 60   OR > 100 is CRITICAL " + "\n"+
                   "Respiratory rate less than 12 OR > 25 is CRITICAL " + "\n"+
@@ -300,9 +299,9 @@ myServer.get('/patients/critical', function (req, resp, next) {
   
   // Find all patients in our database
   PatientModel.find({}).exec(function (error, result) {
-   // if (error) return next(new Error(JSON.stringify(error.errors)))
-   // resp.send(result);
-   //console.log(result)
+    //Catch errors
+   if (error) return next(new Error(JSON.stringify(error.errors)))
+   //If no errors, make a new JSON obj to start storing patient info in
    var criticalPatients = [];
    for(var i = 0; i < result.length; i++) {
     var obj = result[i];
@@ -313,7 +312,7 @@ myServer.get('/patients/critical', function (req, resp, next) {
               (obj.respiratoryRate < 12 || obj.bloodPressure > 25) ||
               (obj.bloodOxygenLevel < 90 || obj.bloodPressure > 130) 
             ){
-            //console.log(obj.bloodPressure);
+            //Push critical patients into temp JSON object to send back to user
             criticalPatients.push(
               {
                 _id             : obj.id,
@@ -332,7 +331,9 @@ myServer.get('/patients/critical', function (req, resp, next) {
             );
           }//If statement ends
     }//For loop ends 
-//Send back all patients with critical readings...
+  //Send back all patients with critical readings...
   resp.send(criticalPatients)
   });
 });//end of get all patients
+
+//**************************** END OF SERVER *******************************/
