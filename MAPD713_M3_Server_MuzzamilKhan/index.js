@@ -242,7 +242,7 @@ myServer.post('/patients/search', function(req, resp, next){
 
 //5. DELETE A PATIENT BY ID: REQ TYPE DEL 
 myServer.del('/patients/:id', function(req,resp, next){
-    console.log("Delete request : Coming in, Delete patient by ID ")
+    console.log("Delete request : Coming in, Delete patient by ID ");
 
     //Use of .remove method of restify
     PatientModel.remove({_id: req.params.id}, function(error, deletedPatient){
@@ -257,4 +257,36 @@ myServer.del('/patients/:id', function(req,resp, next){
     });
 });//Delete by id ends
 
+//6. UPDATE A PATIENT BY ID: REQ TYPE PUT
+myServer.put('/patients/:id', function(req, resp, next){
+  console.log("Update request : Coming in, patient by ID ")
+     
+  var patientObj= PatientModel.updateOne(
+  { id: req.params.id },  // <-- find stage
+  { $set: {                // <-- set stage
+    id              : req.params.id,
+    firstName       : req.body.firstName,
+    lastName        : req.body.lastName,
+    age             : req.body.age,
+    phoneNum        : req.body.phoneNum,
+    visitDate       : req.body.visitDate,
+    familyDoctor    : req.body.familyDoctor,
+    bloodPressure   : req.body.bloodPressure,
+    heartBeatRate   : req.body.heartBeatRate,
+    respiratoryRate : req.body.respiratoryRate,
+    CDCTemperature  : req.body.CDCTemperature,
+    bloodOxygenLevel: req.body.bloodOxygenLevel
+    } 
+  })  
+      //Update the patient in DB using update method
+      PatientModel.updateOne(patientObj, function(error, updatedPatient){
+        //Catch any errors and print
+        if(error){
+          //return next(new restify.InvalidArgumentError(JSON.stringify(error.errors)));
+          console.log("error")
+          console.log(error)
+        }
+        resp.send(updatedPatient);
+      });
 
+});//Update by id ends
