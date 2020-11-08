@@ -289,19 +289,50 @@ myServer.put('/patients/:id', function(req, resp, next){
     });
   });
 
-//7. LIST ALL PATIENTS CRITICAL CONDITION
-// myServer.get('/patients/critical', function (req, resp, next) {
-//   console.log('GET request: Coming in for list of all paitents');
-//   // Find all patients in our database
-//   PatientModel.find({}).exec(function (error, result) {
-//    // if (error) return next(new Error(JSON.stringify(error.errors)))
-//    // resp.send(result);
-//    //console.log(result)
-
-//    for(var i = 0; i < result.length; i++) {
-//     var obj = result[i];
-
-//     console.log(obj.bloodPressure);
-// }
-//   });
-// });//end of get all patients
+//7. LIST ALL PATIENTS WITH CRITICAL CONDITION
+myServer.get('/patients/critical', function (req, resp, next) {
+  console.log('FIND ALL PAITIENTS WITH CRITICAL MEDICAL READINGS:');
+  var conditions= "Blood pressure less than 80   OR > 130 is CRITICAL " + "\n"+
+                  "Heartbeat rate less than 60   OR > 100 is CRITICAL " + "\n"+
+                  "Respiratory rate less than 12 OR > 25 is CRITICAL " + "\n"+
+                  "Blood Oxygen Level rate less than 90 is CRITICAL " + "\n";
+  console.log(conditions);
+  
+  // Find all patients in our database
+  PatientModel.find({}).exec(function (error, result) {
+   // if (error) return next(new Error(JSON.stringify(error.errors)))
+   // resp.send(result);
+   //console.log(result)
+   var criticalPatients = [];
+   for(var i = 0; i < result.length; i++) {
+    var obj = result[i];
+          //Valication to fetch out critical patients
+          if( 
+              (obj.bloodPressure < 80 || obj.bloodPressure > 130) ||
+              (obj.heartBeatRate < 60 || obj.bloodPressure > 100) ||
+              (obj.respiratoryRate < 12 || obj.bloodPressure > 25) ||
+              (obj.bloodOxygenLevel < 90 || obj.bloodPressure > 130) 
+            ){
+            //console.log(obj.bloodPressure);
+            criticalPatients.push(
+              {
+                _id             : obj.id,
+                firstName       : obj.firstName,
+                lastName        : obj.lastName,
+                age             : obj.age,
+                phoneNum        : obj.phoneNum,
+                visitDate       : obj.visitDate,
+                familyDoctor    : obj.familyDoctor,
+                bloodPressure   : obj.bloodPressure,
+                heartBeatRate   : obj.heartBeatRate,
+                respiratoryRate : obj.respiratoryRate,
+                CDCTemperature  : obj.CDCTemperature,
+                bloodOxygenLevel: obj.bloodOxygenLevel
+              }
+            );
+          }//If statement ends
+    }//For loop ends 
+//Send back all patients with critical readings...
+  resp.send(criticalPatients)
+  });
+});//end of get all patients
