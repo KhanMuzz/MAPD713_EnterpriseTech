@@ -306,12 +306,12 @@ myServer.get('/patients/critical', function (req, resp, next) {
    for(var i = 0; i < result.length; i++) {
     var obj = result[i];
           //Valication to fetch out critical patients
-          if( 
-              (obj.bloodPressure < 80 || obj.bloodPressure > 130) ||
-              (obj.heartBeatRate < 60 || obj.bloodPressure > 100) ||
-              (obj.respiratoryRate < 12 || obj.bloodPressure > 25) ||
-              (obj.bloodOxygenLevel < 90 || obj.bloodPressure > 130) 
+          if((obj.bloodPressure < 80 || obj.bloodPressure > 130)   ||
+            (obj.heartBeatRate < 60 || obj.bloodPressure > 100)    ||
+            (obj.respiratoryRate < 12 || obj.respiratoryRate > 25) ||
+            (obj.bloodOxygenLevel < 90 || obj.bloodOxygenLevel > 130) 
             ){
+          
             //Push critical patients into temp JSON object to send back to user
             criticalPatients.push(
               {
