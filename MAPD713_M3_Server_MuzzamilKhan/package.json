@@ -18,5 +18,7 @@
   },
   "author": "Muzzamil Khan",
   "studentId": "301163748",
-  "private": "true"
+  "private": "true",
+  "devDependencies": {},
+  "keywords": []
 }
