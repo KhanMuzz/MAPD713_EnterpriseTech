@@ -199,6 +199,7 @@ myServer.post('/patients/search', function(req, resp, next){
     }else{
       //Send back error 404 code
       resp.send(404);
+      console.log(error.errors)
     }
    });
   }else if(req.body.lastName){
