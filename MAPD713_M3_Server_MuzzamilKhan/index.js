@@ -25,6 +25,10 @@ var ipAddress = process.env.MY_HOST_IP;
 var uriString = 
   process.env.MONGODB_URI || 
   'mongodb://127.0.0.1:27017/data';
+//cloud mongo uri
+var cloudMongoUri = 'mongodb+srv://root:root1234@cluster0.bocsx.mongodb.net/patientdb?retryWrites=true&w=majority'
+//update uri to call cloud
+uriString = cloudMongoUri;
 
 //Use Async Connection to connect to MongoDB 
 mongoose.connect(uriString, {useNewUrlParser: true});  
@@ -39,7 +43,7 @@ dbConnectionReady.on('error', console.error.bind(console, 'Unable to connect'));
 dbConnectionReady.once('open', function(){
     console.log("**************************************************************");
     console.log("Welcome to: " + SERVER_NAME);
-    console.log("You are now connected to MongoDB at: " + uriString);
+    console.log("You are now connected to MongoDB cloud storage");
     console.log("**************************************************************");
 });
 
@@ -308,7 +312,7 @@ myServer.get('/patients/critical', function (req, resp, next) {
     var obj = result[i];
           //Valication to fetch out critical patients
           if((obj.bloodPressure < 80 || obj.bloodPressure > 130)   ||
-            (obj.heartBeatRate < 60 || obj.bloodPressure > 100)    ||
+            (obj.heartBeatRate < 60 || obj.heartBeatRate > 100)    ||
             (obj.respiratoryRate < 12 || obj.respiratoryRate > 25) ||
             (obj.bloodOxygenLevel < 90 || obj.bloodOxygenLevel > 130) 
             ){
