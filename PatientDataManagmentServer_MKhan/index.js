@@ -8,8 +8,8 @@ GITHUB REPO ADD: https://github.com/KhanMuzz/MAPD713_EnterpriseTech.git
 */
 
 //Required global variables for operations of this server
-var MY_MAIN_PORT = 5000;
-var MY_HOST_IP = '127.0.0.1';
+var MY_MAIN_PORT = (process.env.PORT || 5000);
+//var MY_HOST_IP = '127.0.0.1';
 var SERVER_NAME = 'PATIENTS DATA MANAGMENT';
 
 //Libraries needed for use, http for req/resp calls and moongoose for DATABASE
@@ -18,10 +18,11 @@ var mongoose = require('mongoose');
 
 //Fetch port number and IP from environement variables if there is one and store in variables
 var port = process.env.MY_MAIN_PORT;
-var ipAddress = process.env.MY_HOST_IP;
+//var ipAddress = process.env.MY_HOST_IP;
 
 //Fetch URI from environment variable if there is one OR just use one provided
 //Connect to localhost if no other database is found to connect to
+//THIS URI IS A CALL TO MONGODB FOR STORAGE NO HEROKU
 var uriString = 
   process.env.MONGODB_URI || 
   'mongodb://127.0.0.1:27017/data';
@@ -30,7 +31,7 @@ var cloudMongoUri = 'mongodb+srv://root:root1234@cluster0.bocsx.mongodb.net/pati
 //update uri to call cloud
 uriString = cloudMongoUri;
 
-//Use Async Connection to connect to MongoDB 
+//Use Async Connection to connect to MongoDB cloud storage
 mongoose.connect(uriString, {useNewUrlParser: true});  
 
 //Store a connection made to Mongo in a variable for further use
@@ -76,18 +77,19 @@ const { type } = require('os');
 myServer = restify.createServer({ name : SERVER_NAME});
 
 //Check if ip and port number was not found in environment vairables and assign default values
-if(typeof ipAddress === "undefined"){
-  console.warn('No process.env.IP var, using default: ' + MY_HOST_IP);
-		ipAddress = MY_HOST_IP;
-};
+// if(typeof ipAddress === "undefined"){
+//   console.warn('No process.env.IP var, using default: ' + MY_HOST_IP);
+// 		ipAddress = MY_HOST_IP;
+// };
 if (typeof port === "undefined") {
   console.warn('No process.env.PORT var, using default port: ' + MY_MAIN_PORT);
   port = MY_MAIN_PORT;
 };
 
+//THIS IS WHERE HEROKU WILL USE THE PORT 
 //Start the restify server with port and ip set
-myServer.listen(port, ipAddress, function(){
-  console.log("This server is listening at: "+MY_HOST_IP+":"+MY_MAIN_PORT);
+myServer.listen(port, function(){
+  console.log("This server is listening at: " + MY_MAIN_PORT);
   console.log("**************************************************************");
   console.log("THIS SERVERS OFFERS ENDPOINTS/ACTIONS BELOW")
   console.log("List all Patients: GET, DB must have values for this OR returns []")
