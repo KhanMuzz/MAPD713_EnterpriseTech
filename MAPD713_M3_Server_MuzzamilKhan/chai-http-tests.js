@@ -1,3 +1,12 @@
+/*
+Developer: Muzzamil Khan
+Course:    MAPD-713 Enterprise
+Desc:      Milestone 3 USED FOR END 2 END TESTING SERVER, MongoDb - Local Implementation
+App:       Paitent Data Management - Backend system
+COURSE PROFESSOR: MR . VICTOR ZAYTSEV
+GITHUB REPO ADD: https://github.com/KhanMuzz/MAPD713_EnterpriseTech.git
+* THIS IS THE TEST FILE, SEE TEST RUN INSTRUCTIONS ON TOP OF index.js
+*/
 
 var chai = require('chai');
 var chaiHttp = require('chai-http');

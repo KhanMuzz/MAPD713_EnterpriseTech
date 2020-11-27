@@ -1,10 +1,14 @@
 /*
 Developer: Muzzamil Khan
 Course:    MAPD-713 Enterprise
-Desc:      Milestone 3 - END 2 END TESTING SERVER, MongoDb - Local Implementation
+Desc:      Milestone 3 USED FOR END 2 END TESTING SERVER, MongoDb - Local Implementation
 App:       Paitent Data Management - Backend system
 COURSE PROFESSOR: MR . VICTOR ZAYTSEV
 GITHUB REPO ADD: https://github.com/KhanMuzz/MAPD713_EnterpriseTech.git
+
+Test instructions: 
+1. Run node index.js to run this file in git bash or seperate terminal
+2. Open file chai-http-tests.js and run command ' mocha chai-http-tests.js ' and 7 tests will run 
 */
 
 //Required global variables for operations of this server
