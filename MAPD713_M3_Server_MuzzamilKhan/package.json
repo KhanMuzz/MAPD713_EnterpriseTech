@@ -13,12 +13,16 @@
   },
   "license": "MIT",
   "dependencies": {
+    "chai-http": "^4.3.0",
+    "mocha": "^8.2.1",
     "mongoose": "=5.10.7",
     "restify": "=8.5.1"
   },
   "author": "Muzzamil Khan",
   "studentId": "301163748",
   "private": "true",
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^4.2.0"
+  },
   "keywords": []
 }

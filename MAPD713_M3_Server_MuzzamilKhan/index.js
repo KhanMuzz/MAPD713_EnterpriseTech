@@ -1,7 +1,7 @@
 /*
 Developer: Muzzamil Khan
 Course:    MAPD-713 Enterprise
-Desc:      Milestone 3, MongoDb Server, Local Implementation
+Desc:      Milestone 3 - END 2 END TESTING SERVER, MongoDb - Local Implementation
 App:       Paitent Data Management - Backend system
 COURSE PROFESSOR: MR . VICTOR ZAYTSEV
 GITHUB REPO ADD: https://github.com/KhanMuzz/MAPD713_EnterpriseTech.git
@@ -121,7 +121,7 @@ myServer.listen(port, ipAddress, function(){
     // Find all patients in our database
     PatientModel.find({}).exec(function (error, result) {
       if (error) return next(new Error(JSON.stringify(error.errors)))
-      resp.send(result);
+      resp.send(200, result);
     });
   });//end of get all patients
 
@@ -171,8 +171,8 @@ myServer.listen(port, ipAddress, function(){
     }//Else ends
   });//Create new patient method ends
 
-   //3. SEARCH A PATIENT BY ID: REQ METHOD TYPE : GET/:ID
-   myServer.get('/patients/:id', function(req, resp, next){
+  //3. SEARCH A PATIENT BY ID: REQ METHOD TYPE : GET/:ID
+  myServer.get('/patients/:id', function(req, resp, next){
      console.log("Get request: coming in to search by id: " + req.params.id);
 
      //Find the patient by id match in the database
@@ -250,8 +250,10 @@ myServer.del('/patients/:id', function(req,resp, next){
     PatientModel.remove({_id: req.params.id}, function(error, deletedPatient){
       //Catch error
       if(error){
+          resp.send(500);
           return next(new Error(JSON.stringify(error.errors)));
           console.log("Something went wrong");
+          
       }else{
         //Send back ok code and a message to user
         resp.send(200)
@@ -267,8 +269,9 @@ myServer.put('/patients/:id', function(req, resp, next){
   //Use a new model called tempPatientModel to find correct patient by ID and store it inside 
       PatientModel.findById(req.params.id, function(err, tempPatientModel) {
 
-        if (err)
-            resp.send(err);
+        if (err){
+            resp.send(500, 'ID PROVIDED IS WRONG');
+        }else{
         //Start placing values from body of request to the tempPatientModel
         tempPatientModel.firstName       = req.body.firstName,
         tempPatientModel.lastName        = req.body.lastName,
@@ -289,7 +292,10 @@ myServer.put('/patients/:id', function(req, resp, next){
             //If no errors send back a response to user
             resp.json({ message: 'Yayyyy! Patient Updated!' });
         });
+      }//else
     });
+
+
   });//Update patient by id ends
 
 //7. LIST ALL PATIENTS WITH CRITICAL CONDITION
@@ -304,6 +310,7 @@ myServer.get('/patients/critical', function (req, resp, next) {
   
   // Find all patients in our database
   PatientModel.find({}).exec(function (error, result) {
+
     //Catch errors
    if (error) return next(new Error(JSON.stringify(error.errors)))
    //If no errors, make a new JSON obj to start storing patient info in
